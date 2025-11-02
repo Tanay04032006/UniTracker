@@ -1,0 +1,21 @@
+CREATE DATABASE IF NOT EXISTS fintrack;
+USE fintrack;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(150) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  title VARCHAR(200),
+  amount DECIMAL(10,2),
+  type ENUM('income','expense') NOT NULL,
+  category VARCHAR(100),
+  txn_date DATE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: fintrack
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: mariadb
+      DB_USER: root
+      DB_PASSWORD: example
+      DB_NAME: fintrack
+    depends_on:
+      - mariadb
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://backend:4000
+
+volumes:
+  db-data:
